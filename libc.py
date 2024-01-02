@@ -15,12 +15,11 @@ def read_so(info, memory, soname):
         if so_addr == 0:
             so_addr = region['begin']
             so_end = region['end']
-        else:
-            if region['begin'] != so_end:
-                break
-            else:
-                so_end = region['end']
+        elif region['begin'] == so_end:
+            so_end = region['end']
 
+        else:
+            break
         size = region["end"] - region["begin"]
 
         memory.seek(region["saved_offset"], 0)
