@@ -23,8 +23,6 @@ with open(info_pathname, "r") as fp:
 memory_data = open(info_pathname.parent / memory_info['memory_file'], "rb")
 
 def load_memory(mu):
-    idx = 0
-
     regions = []
     for region in memory_info["regions"]:
         r = dict(region)
@@ -45,7 +43,7 @@ def load_memory(mu):
         if file.endswith("jar") or file.endswith("apk") or file.endswith("hyb"):
             continue
 
-        if len(regions) == 0:
+        if not regions:
             regions.append(r)
             continue
 
@@ -56,7 +54,7 @@ def load_memory(mu):
         regions.append(r)
     print(len(regions))
 
-    for region in regions:
+    for idx, region in enumerate(regions):
         size = region["end"] - region["begin"]
         mu.mem_map(region["begin"], size)
 
@@ -67,7 +65,6 @@ def load_memory(mu):
             del mem
 
         print(f"Load {idx}/{len(memory_info['regions'])} {region['begin']:x}-{region['end']:x} {size} {region['file']} {region['desc']}")
-        idx += 1
         
 END_ADDRESS = 0x55aa55aa55aa55aa
 STACK_ADDRESS = 0x8FFF800000000000
